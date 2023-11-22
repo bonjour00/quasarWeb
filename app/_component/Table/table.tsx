@@ -9,9 +9,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { QA } from "@/app/_settings/interface";
 import DialogModel from "./dialog";
+import SelectOption from "./select";
 
 export default function Table() {
-  const [QaList, createQA, deleteQA, updateQA] = useQA();
+  const [
+    QaList,
+    createQA,
+    deleteQA,
+    updateQA,
+    selectOffice,
+    selectOrder,
+    setSelectOffice,
+    setSelectOrder,
+  ] = useQA();
+  // console.log("selectOffice", selectOffice, "selectOrder", selectOrder);
   const PAGE_SIZE = 3;
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,
@@ -30,6 +41,14 @@ export default function Table() {
       { value: "2", title: "統資" },
       { value: "3", title: "圖資" },
     ],
+  };
+  const propsOrder = {
+    label: "順序",
+    options: [
+      { value: "desc", title: "最新" },
+      { value: "asc", title: "最舊" },
+    ],
+    order: "desc",
   };
   const editPop = (selectedRow: QA) => {
     setEditSelected(selectedRow);
@@ -62,6 +81,7 @@ export default function Table() {
   console.log(editSelected);
   return (
     <>
+      <SelectOption props={propsOrder} />
       <DataGrid
         autoHeight
         rows={QaList}

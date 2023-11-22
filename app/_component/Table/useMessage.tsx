@@ -18,6 +18,8 @@ export default function useQA() {
   const [QaList, setQalist] = useState<QA[]>([]);
   const [updated, setUpdated] = useState(0);
   const qaRef = collection(db, "QA");
+  const [selectOffice, setSelectOffice] = useState("");
+  const [selectOrder, setSelectOrder] = useState("desc");
 
   useEffect(() => {
     const fetchQA = async () => {
@@ -82,6 +84,15 @@ export default function useQA() {
       console.error(error);
     }
   };
-
-  return [QaList, createQA, deleteQA, updateQA] as const;
+  console.log("selectOffice", selectOffice, "selectOrder", selectOrder);
+  return [
+    QaList,
+    createQA,
+    deleteQA,
+    updateQA,
+    selectOffice,
+    selectOrder,
+    setSelectOffice,
+    setSelectOrder,
+  ] as const;
 }
