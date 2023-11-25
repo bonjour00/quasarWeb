@@ -1,12 +1,13 @@
 import { getApps, initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_APP_ID,
+    apiKey: "AIzaSyCLwnmd4ZBfi0fYA7AtVHLcfZyh486slwU",
+    authDomain: "qampus-7b72a.firebaseapp.com",
+    projectId: "qampus-7b72a",
+    storageBucket: "qampus-7b72a.appspot.com",
+    messagingSenderId: "950103232939",
+    appId: "1:950103232939:web:bc1b5b5378c4dd4aa402ee",
+    measurementId: "G-06TQLJFSE9"
 };
 // Initialize Firebase App
 let firebase_app =

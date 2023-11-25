@@ -15,6 +15,9 @@ import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 import { useRouter, usePathname } from "next/navigation";
+import { useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
+import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 
 const drawerWidth = 240;
 
@@ -69,6 +72,23 @@ export default function MiniDrawer() {
   //   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("pending");
+  const [user, setUser] = useState<User | null>(null); 
+
+  const fetchUserInformation = () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        setUser(null);
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchUserInformation();
+  }, []);
+
   const menuList = [
     {
       title: "待審核問題",
@@ -102,7 +122,7 @@ export default function MiniDrawer() {
         </IconButton>
       </DrawerHeader>
       <List>
-        {menuList.map((x, index) => (
+      {menuList.map((x, index) => (
           <ListItem
             key={x.title}
             disablePadding
@@ -130,7 +150,35 @@ export default function MiniDrawer() {
             </ListItemButton>
           </ListItem>
         ))}
+        {user ? (
+          <ListItem disablePadding sx={{ display: "block" }} onClick={() => router.push('/')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <Avatar alt={user?.displayName || undefined} src={user?.photoURL || undefined} />
+              <ListItemText primary={user.displayName} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        ) : (
+          <ListItem disablePadding sx={{ display: "block" }} onClick={() => router.push('/')}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <Avatar />
+              <ListItemText primary="Guest" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     </Drawer>
   );
+
 }
