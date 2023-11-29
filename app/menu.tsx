@@ -18,6 +18,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import app from './_firebase/Config'
 
 const drawerWidth = 240;
 
@@ -75,7 +76,7 @@ export default function MiniDrawer() {
   const [user, setUser] = useState<User | null>(null); 
 
   const fetchUserInformation = () => {
-    const auth = getAuth();
+    const auth = getAuth(app);
     onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
@@ -105,6 +106,11 @@ export default function MiniDrawer() {
       title: "尚未確認問題",
       icon: <ContentPasteSearchOutlinedIcon />,
       url: "/noAssign",
+    },
+    {
+      title: "寄信",
+      icon: <ContentPasteSearchOutlinedIcon />,
+      url: "/testmail",
     },
   ];
 
