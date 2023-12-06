@@ -22,7 +22,7 @@ export default function Table() {
     setSelectOffice,
     setSelectOrder,
   ] = useQA();
-  // console.log("selectOffice", selectOffice, "selectOrder", selectOrder);
+
   const PAGE_SIZE = 3;
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,
@@ -30,6 +30,7 @@ export default function Table() {
   });
   const [editSelected, setEditSelected] = useState<QA>();
   const [open, setOpen] = useState(false);
+
   const props = {
     open,
     setOpen,
@@ -42,6 +43,7 @@ export default function Table() {
       { value: "3", title: "圖資" },
     ],
   };
+
   const propsOrder = {
     label: "順序",
     options: [
@@ -50,53 +52,87 @@ export default function Table() {
     ],
     order: "desc",
   };
+
   const editPop = (selectedRow: QA) => {
     setEditSelected(selectedRow);
     setOpen(true);
   };
+
   const actionColumn = [
     {
       field: "action",
       headerName: "選項",
       width: 200,
       sortable: false,
-      renderCell: (params: any) => {
-        return (
-          <div>
-            <IconButton aria-label="edit" onClick={() => editPop(params.row)}>
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={() => deleteQA(params.row.qaId)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        );
-      },
+      renderCell: (params: any) => (
+        <div>
+          <IconButton aria-label="edit" onClick={() => editPop(params.row)}>
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => deleteQA(params.row.qaId)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      ),
     },
   ];
 
-  console.log(editSelected);
   return (
-    <>
-      <SelectOption props={propsOrder} />
-      <DataGrid
-        autoHeight
-        rows={QaList}
-        columns={columns.concat(actionColumn)}
-        disableColumnMenu
-        disableRowSelectionOnClick
-        slots={{
-          pagination: PaginationControlled,
+    <div
+      style={{
+        background: "#F7F9FE",
+        padding: "3rem",
+        overflow: "hidden",
+        width: "100%",
+      }}
+    >
+      <div
+        className=""
+        style={{
+          background: "#FFFFFF",
+          padding: "1rem",
+          height: "calc(100% - 1rem)",
+          borderRadius: "1rem",
+          boxShadow: "0px 10px 20px #E8E8E8",
         }}
-        pageSizeOptions={[PAGE_SIZE]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        // loading={true}
-      />
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "1rem",
+          }}
+        >
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: "30px",
+              margin: "0.5rem 1rem 0rem 1rem",
+            }}
+          >
+            尚未確認問題
+          </p>
+          <SelectOption props={propsOrder} />
+        </div>
+        <div style={{ height: "calc(100% - 5rem)", overflow: "auto" }}>
+          <DataGrid
+            rows={QaList}
+            columns={columns.concat(actionColumn)}
+            disableColumnMenu
+            disableRowSelectionOnClick
+            slots={{
+              pagination: PaginationControlled,
+            }}
+            pageSizeOptions={[PAGE_SIZE]}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+          />
+        </div>
+      </div>
       <DialogModel props={props} />
-    </>
+    </div>
   );
 }
