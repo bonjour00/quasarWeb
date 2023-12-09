@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function TestEmail() {
-  const [message, setMessage] = useState({email: 'm101450924@gmail.com', subject: '', html: '' });
+  const [message, setMessage] = useState({email: 'qampusai@gmail.com', subject: '', html: '' });
   const [response, setResponse] = useState('');
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage({ ...message, [e.target.name]: e.target.value });
@@ -33,7 +33,7 @@ export default function TestEmail() {
         <h1>意見反應區</h1>
       </div>
       <div>
-        <h3>如果在系統使用上有遇到任何問題歡迎寄信將反饋給我們~~~</h3>
+        <h3>如果在系統使用上有遇到任何問題，歡迎來信反饋~~~</h3>
       </div>
       <div>
         問題簡述
@@ -48,7 +48,7 @@ export default function TestEmail() {
         />
       </div>
       <div>
-        具體情況說明
+        具體情況說明(可在此留下聯絡方式)
       </div>
       <div>
         <TextField
