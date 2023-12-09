@@ -6,6 +6,7 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithPopup,
+  User,
 } from "firebase/auth";
 import app from "@/app/_firebase/Config";
 import {
@@ -18,6 +19,7 @@ import {
   where,
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import Avatar from "@mui/material/Avatar";
 
 export default function Account() {
   const auth = getAuth(app);
@@ -27,19 +29,39 @@ export default function Account() {
   const storage = getStorage(app);
   const [imageUrl, setImageUrl] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [editadmin, setEditadmin] = useState(false);
-  const [admin, setAdmin] = useState("user");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [admin, setAdmin] = useState("尚未選擇所屬單位");
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        const userCollection = collection(db, "users");
+        const userQuerySnapshot = await getDocs(
+          query(userCollection, where("uid", "==", user.uid))
+        );
+  
+        if (!userQuerySnapshot.empty) {
+          userQuerySnapshot.forEach((doc) => {
+            const userData = doc.data();
+            const userAdmin = userData.admin;
+            const userName = userData.name;
+            const userEmail = userData.email;
+            setAdmin(userAdmin);
+            setName(userName);
+            setEmail(userEmail);
+          });
+        }
         setIsAuthenticated(true);
+        setUser(user);
       } else {
         setIsAuthenticated(false);
+        setUser(null);
       }
     });
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth, db]);
 
   const logout = function (e: React.MouseEvent<HTMLElement>) {
     auth.signOut();
@@ -59,7 +81,7 @@ export default function Account() {
       if (querySnapshot.empty) {
         await addDoc(userCollection, {
           uid: res.user?.uid,
-          admin: "user",
+          admin: "尚未選擇所屬單位",
           email: res.user?.email,
           name: res.user?.displayName,
         });
@@ -70,27 +92,7 @@ export default function Account() {
     }
   };
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const storageRef = ref(storage, "下載.jpg");
-        const url = await getDownloadURL(storageRef);
-        setImageUrl(url);
-      } catch (error) {
-        console.error("Error fetching image from Firebase Storage: ", error);
-      }
-    };
-
-    fetchImage();
-  }, [storage]);
-
   const handleChangeAdminRole = async (event: { target: { value: any } }) => {
-
-    if (editadmin) {
-      setMessage("You do not have permission to change admin role.");
-      return;
-    }
-
     const newRole = event.target.value;
 
     try {
@@ -110,7 +112,6 @@ export default function Account() {
       }
       setAdmin(newRole);
       setMessage(`Admin role updated to ${newRole}`);
-      setEditadmin(true);
     } catch (error) {
       setMessage("Failed to update admin role");
       console.error(error);
@@ -140,21 +141,45 @@ export default function Account() {
         {isAuthenticated && (
           <>
             <div>
-              <h1>基本資料設定</h1>
+              <h1>用戶基本資料</h1>
             </div>
-            <div>{imageUrl && <img src={imageUrl} alt="图片描述" />}</div>
             <div>
-              <select
-                value={admin}
-                onChange={handleChangeAdminRole}
-                style={{ fontSize: "30px" }}
-              >
-                <option value="user">一般學生</option>
-                <option value="admin">系統管理員</option>
-                <option value="資訊中心">資訊中心</option>
-              </select>
+            <Avatar
+              src={user?.photoURL || undefined} />
             </div>
-            <div></div>
+            <div>
+              <h3>用戶名稱</h3>
+              <span>{name}</span>
+            </div>
+            <div>
+              <h3>用戶電子郵件</h3>
+              <span>{email}</span>
+            </div>
+            <div>
+              <h3>用戶權限</h3>
+              <span>{admin}</span>
+            </div>
+            {
+              admin == "尚未選擇所屬單位" && (
+                <>
+                <div>
+                  <h3>第一次登入請選擇所屬單位</h3>
+                </div>
+                <div>
+                  <select
+                    value={admin}
+                    onChange={handleChangeAdminRole}
+                    style={{ fontSize: "30px" }}
+                  >
+                    <option value="尚未選擇所屬單位">尚未選擇所屬單位</option>
+                    <option value="一般學生">一般學生</option>
+                    <option value="系統管理員">系統管理員</option>
+                    <option value="資訊中心">資訊中心</option>
+                  </select>
+                </div>
+                </>
+              )
+            }
             <div>
               <Button variant="contained" color="secondary" onClick={logout}>
                 {"登出"}
