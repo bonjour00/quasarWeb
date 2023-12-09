@@ -27,6 +27,7 @@ export default function Account() {
   const storage = getStorage(app);
   const [imageUrl, setImageUrl] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [editadmin, setEditadmin] = useState(false);
   const [admin, setAdmin] = useState("user");
 
   useEffect(() => {
@@ -84,6 +85,12 @@ export default function Account() {
   }, [storage]);
 
   const handleChangeAdminRole = async (event: { target: { value: any } }) => {
+
+    if (editadmin) {
+      setMessage("You do not have permission to change admin role.");
+      return;
+    }
+
     const newRole = event.target.value;
 
     try {
@@ -103,6 +110,7 @@ export default function Account() {
       }
       setAdmin(newRole);
       setMessage(`Admin role updated to ${newRole}`);
+      setEditadmin(true);
     } catch (error) {
       setMessage("Failed to update admin role");
       console.error(error);

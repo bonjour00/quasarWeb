@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function TestEmail() {
-  const [message, setMessage] = useState({ email: '', subject: '', html: '' });
+  const [message, setMessage] = useState({email: 'm101450924@gmail.com', subject: '', html: '' });
   const [response, setResponse] = useState('');
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage({ ...message, [e.target.name]: e.target.value });
@@ -30,14 +30,13 @@ export default function TestEmail() {
   return (
     <div>
       <div>
-        <TextField
-          type="email"
-          name="email"
-          value={message.email}
-          placeholder="請輸入信箱..."
-          onChange={handleChange}
-          autoComplete="email"
-        />
+        <h1>意見反應區</h1>
+      </div>
+      <div>
+        <h3>如果在系統使用上有遇到任何問題歡迎寄信將反饋給我們~~~</h3>
+      </div>
+      <div>
+        問題簡述
       </div>
       <div>
         <TextField
@@ -47,6 +46,9 @@ export default function TestEmail() {
           placeholder="請輸入信件主題..."
           onChange={handleChange}
         />
+      </div>
+      <div>
+        具體情況說明
       </div>
       <div>
         <TextField
