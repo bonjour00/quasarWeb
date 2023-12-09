@@ -63,6 +63,20 @@ export default function Account() {
     return () => unsubscribe();
   }, [auth, db]);
 
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const storageRef = ref(storage, "下載.jpg");
+        const url = await getDownloadURL(storageRef);
+        setImageUrl(url);
+      } catch (error) {
+        console.error("Error fetching image from Firebase Storage: ", error);
+      }
+    };
+
+    fetchImage();
+  }, [storage]);
+
   const logout = function (e: React.MouseEvent<HTMLElement>) {
     auth.signOut();
     setStatus("登入");
@@ -155,10 +169,14 @@ export default function Account() {
               <h3>用戶電子郵件</h3>
               <span>{email}</span>
             </div>
-            <div>
-              <h3>用戶權限</h3>
-              <span>{admin}</span>
-            </div>
+            {
+              admin != "尚未選擇所屬單位" && (
+                <div>
+                  <h3>用戶權限</h3>
+                  <span>{admin}</span>
+                </div>
+              )
+            }
             {
               admin == "尚未選擇所屬單位" && (
                 <>

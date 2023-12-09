@@ -31,7 +31,7 @@ const menuList = [
     icon: <ContentPasteSearchOutlinedIcon />,
     url: "/noAssign",
   },
-  { title: "寄信", icon: <ContentPasteSearchOutlinedIcon />, url: "/testmail" },
+  { title: "意見反映", icon: <ContentPasteSearchOutlinedIcon />, url: "/testmail" },
 ];
 
 const MiniDrawer = () => {
