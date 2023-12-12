@@ -33,10 +33,10 @@ export default function TestEmail() {
         <h1>意見反應區</h1>
       </div>
       <div>
-        <h3>如果在系統使用上有遇到任何問題，歡迎來信反饋~~~</h3>
+        <h3>如果覺得這個系統有任何可以改進的地方，歡迎來信反饋~~~</h3>
       </div>
       <div>
-        問題簡述
+        主旨
       </div>
       <div>
         <TextField
@@ -48,7 +48,7 @@ export default function TestEmail() {
         />
       </div>
       <div>
-        具體情況說明(可在此留下聯絡方式)
+        具體建議(我們可能會寄信回覆您喔~)
       </div>
       <div>
         <TextField
